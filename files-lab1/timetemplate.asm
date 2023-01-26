@@ -74,3 +74,30 @@ tiend:	sw	$t0,0($a0)	# save updated result
 
   # you can write your code for subroutine "hexasc" below this line
   #
+hexasc:
+	 # Ska & 0xf med a0 för att endast få 4 lsb
+	add $t0, $a0, $0
+	andi $t0, 0x0f
+	addi $t1, $t0, 0x30
+	bge $t0, 10, chars
+	add $v0, $t1, $0
+	jr $ra
+	chars:	
+	addi $t2, $t1, 7
+	add $v0, $t2, $0
+	jr $ra
+	
+
+delay:
+  jr $ra
+  nop
+  
+  
+time2string:
+		PUSH $ra
+		
+		
+		
+		POP $ra
+		jr $ra
+		nop

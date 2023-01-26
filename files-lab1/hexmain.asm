@@ -4,7 +4,7 @@
 
 	.text
 main:
-	li	$a0,0		# change this to test different values
+	li	$a0,16		# change this to test different values
 
 	jal	hexasc		# call hexasc
 	nop			# delay slot filler (just in case)	
@@ -19,4 +19,21 @@ stop:	j	stop		# stop after one run
 
   # You can write your own code for hexasc here
   #
-
+hexasc:
+	 # Ska & 0xf med a0 för att endast få 4 lsb
+	#addi $t3, $ra, 0
+	add $t0, $a0, $0
+	
+	#add $v0, $a0, $0
+	andi $t0, 0x0f
+	addi $t1, $t0, 0x30
+	bge $t0, 10, chars
+	add $v0, $t1, $0
+	jr $ra
+chars:	
+	addi $t2, $t1, 7
+	add $v0, $t2, $0
+	#add $a0, $0, $t0
+	#addi $ra, $t3, 0
+	jr $ra
+	
