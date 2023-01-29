@@ -15,16 +15,17 @@
 	.data
 	.align 2
 mytime:	.word 0x5957
-timstr:	.ascii "text more text lots of text\0"
+timstr:	.ascii "A bunch of text\0"
 	.text
 main:
 	# print timstr
-	la	$a0,timstr
+	
+	la	$a0, timstr
 	li	$v0,4
 	syscall
 	nop
 	# wait a little
-	li	$a0,2
+	li	$a0,1000
 	jal	delay
 	nop
 	# call tick
@@ -74,3 +75,105 @@ tiend:	sw	$t0,0($a0)	# save updated result
 
   # you can write your code for subroutine "hexasc" below this line
   #
+  
+hexasc:
+	andi $t1, $a3, 15 #Clears all bits except 0-3
+	addi $t2, $t1, 0x30 #Adds 0x30 to convert to ASCII (0x30 is char 0)
+	bltu $t1, 10, skip #If t1 smaller than 10, we dont need to do any more changes. skips
+	addi $t2, $t2, 7 #Here its larger than 10, we need to convert to letters, We do this by adding 7
+	skip: 
+	move $v0, $t2 #Value of $v0 is set to value of $t2
+	jr $ra #return (jump to return address)
+	nop
+	
+delay:
+	PUSH $t0
+	PUSH $t1
+	PUSH $t2
+
+	
+	li $t0, 400 #Amount of itterations in for loop, change until it takes 1ms
+
+	addi $t2, $a0, 0 #Amount of ms
+	
+	loop: #While loop
+	
+	beq $t2, $0, stop #Stops the while loop if ms is less than or equal to 0
+	subi $t2, $t2, 1 # subtracts 1
+	li $t1, 0 #For loop counter, int i;
+	forLoop:
+	bge $t1, $t0, stopForLoop #Stops for loop if $t1 >= $t0 (i >= 4711)
+	addi $t1, $t1, 1 #i = i + 1;
+
+	j forLoop
+	stopForLoop:
+
+	j loop
+	stop:
+
+
+	POP $t2
+	POP $t1
+	POP $t0
+	
+	
+	jr $ra
+  	nop
+	
+time2string: 
+	PUSH $ra
+	PUSH $v0
+	andi $t4, $t4, 0 #init t4
+	andi $t5, $0, 0
+	PUSH $t4 #Save the cleared t4
+
+	andi $t4, $a1, 0xf #set t4 to 4 LSB of a1. (least significant digit for seconds)
+	move $a3, $t4 #Set arguent value a3 used in hexasc to value of t4
+	jal hexasc
+	sll $t4, $v0, 0 #Nothing
+	or $t5, $t4, $t5
+	sw $t5, 4($a0)
+	POP $t4 #Recover a cleared t4
+	
+	
+	
+	
+	andi $t5, $t5, 0 #Sets t5 to 0
+	PUSH $t4 #Save the cleared t4
+	srl $t4, $a1, 4
+	andi $t4, $t4, 0xf
+	move $a3, $t4
+	jal hexasc
+	sll $t4, $v0, 24
+	or $t5, $t5, $t4 #Adds t4 to t5
+	addi $t6, $0, 0x003a0000
+	or $t5, $t5, $t6 #Adds semicolon
+	POP $t4 #Recover a cleared t4
+	
+	
+	PUSH $t4 #Save the cleared t4
+	srl $t4 $a1, 8
+	andi $t4, $t4, 0xf
+	move $a3, $t4
+	jal hexasc
+	sll $t4, $v0, 8
+	or $t5, $t5, $t4 #Adds t4 to t5
+	POP $t4 #Recover a cleared t4
+
+	
+	PUSH $t4 #Save the cleared t4
+	srl $t4 $a1, 12
+	andi $t4, $t4, 0xf
+	move $a3, $t4
+	jal hexasc
+	sll $t4, $v0, 0
+	or $t5, $t5, $t4 #Adds t4 to t5
+	POP $t4 #Recover a cleared t4
+	sw $t5, ($a0)
+	
+	POP $v0
+	POP $ra
+	jr $ra
+	nop
+	
+	

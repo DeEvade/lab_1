@@ -31,6 +31,5 @@ hexasc:
 	addi $t2, $t2, 7 #Here its larger than 10, we need to convert to letters, We do this by adding 7
 skip: 
 	move $v0, $t2 #Value of $v0 is set to value of $t2
-	
 	jr $ra #return (jump to return address)
 	
