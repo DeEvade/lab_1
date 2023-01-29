@@ -90,7 +90,6 @@ delay:
 	PUSH $t0
 	PUSH $t1
 	PUSH $t2
-
 	
 	li $t0, 400 #Amount of itterations in for loop, change until it takes 1ms
 
@@ -98,17 +97,20 @@ delay:
 	
 	loop: #While loop
 	
-	beq $t2, $0, stop #Stops the while loop if ms is less than or equal to 0
+	ble $t2, $0, stop #Stops the while loop if ms is less than or equal to 0, works for negative values of $a0
 	subi $t2, $t2, 1 # subtracts 1
 	li $t1, 0 #For loop counter, int i;
 	forLoop:
 	bge $t1, $t0, stopForLoop #Stops for loop if $t1 >= $t0 (i >= 4711)
 	addi $t1, $t1, 1 #i = i + 1;
-
+	 #Do nothing
+	 
 	j forLoop
+	nop
 	stopForLoop:
 
 	j loop
+	nop
 	stop:
 
 
