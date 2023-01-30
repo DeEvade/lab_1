@@ -19,6 +19,7 @@ int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
 /* Interrupt Service Routine */
+
 void user_isr( void )
 {
   return;
@@ -27,6 +28,8 @@ void user_isr( void )
 /* Lab-specific initialization goes here */
 void labinit( void )
 {
+  //void delay(int);
+  //void time2string( char *, int );
   return;
 }
 
