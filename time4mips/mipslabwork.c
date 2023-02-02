@@ -6,6 +6,9 @@
    This file should be changed by YOU! So you must
    add comment(s) here with your name(s) and date(s):
 
+   Updated 2023-01-30 by O Gertling
+   Updated 2023-01-30 by W Redgård
+
    This file modified 2017-04-31 by Ture Teknolog 
 
    For copyright and licensing, see file COPYING */

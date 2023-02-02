@@ -8,8 +8,8 @@
   # Please keep the two macros PUSH and POP unchanged
   #
 
-.global delay
-.global time2string
+.global delay # Måste det läggas till här eller i slutet av fil enligt instruktion? 
+.global time2string # Måste det läggas till här eller i slutet av fil enligt instruktion? 
 
 .macro	PUSH reg
 	addi	$sp,$sp,-4
@@ -44,7 +44,7 @@ delay: # $a2 input till func, t1 = i.
 	# addi $a2, $0, 0
 	addi $t0, $a0, 0
 while:
-	beq $t0, $0, exit
+	ble $t0, $0, exit
 	addi $t0, $t0, -1
 	li $t1, 0
 	j forLoop

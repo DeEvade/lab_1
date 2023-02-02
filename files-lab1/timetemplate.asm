@@ -76,14 +76,14 @@ tiend:	sw	$t0,0($a0)	# save updated result
   #
 hexasc:
 	 # Ska & 0xf med a0 för att endast få 4 lsb
-	add $t0, $a3, $0
-	andi $t0, 0x0f
-	addi $t1, $t0, 0x30
-	bge $t0, 10, chars
-	add $v0, $t1, $0
-	jr $ra
+	add $t0, $a3, $0 	# takes in a3 as argument, copies it to temp (move better?)
+	andi $t0, 0x0f   	# masking all but the first 4 bits of $t0 ($a3)
+	addi $t1, $t0, 0x30 	# adding 0x30 to $t0 and storing the sum in $t1.
+	bge $t0, 10, chars	# Branch Greater than or Equal to, if $t0, (before addition) is greater than 10 it is a char.
+	add $v0, $t1, $0	# Copies $t1 into the return register $v0.
+	jr $ra			# Return to where we came from.
 	nop
-	chars:	
+	chars:			# If $t0/$a3 (first 4 bits) 
 	addi $t2, $t1, 7
 	add $v0, $t2, $0
 	jr $ra
@@ -94,8 +94,8 @@ delay: # $a2 input till func, t1 = i.
 	# addi $a2, $0, 1000
 	addi $t0, $a0, 0
 while:
-	beq $t0, $0, exit
-	subi $t0, $t0, 1
+	ble $t0, $0, exit
+	addi $t0, $t0, -1 # MCB fattar ej subi
 	li $t1, 0
 	j forLoop
 	nop
@@ -103,6 +103,7 @@ forLoop:
 	bge $t1, 1200, while
 	addi $t1, $t1, 1
 	j forLoop
+	nop
 	
  exit:
   	POP $ra
@@ -112,8 +113,6 @@ forLoop:
 time2string:
 	
 	PUSH $ra
-
-
 
 	andi $t1, $a1, 0xf000 # First digit 0000..... 1111 0000 0000 0000
 	srl $a3, $t1, 12 
@@ -143,7 +142,7 @@ time2string:
 	
 	addi $t8, $0, 0x3a    # :
 
-	sb $0, 5($a0) # Clearing $a0 Eller nullbyten är det väl kanske?
+	sb $0, 5($a0)  # Setting nullbyte.
 	sb $t4, 0($a0) # 10:00
 	sb $t5, 1($a0) # 01:00
 	sb $t8, 2($a0) # :
